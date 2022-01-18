@@ -28,6 +28,9 @@ class CurrencyListAdapter() :
     }
 
     override fun getItemCount() = listItems.size
+    public fun getCurrenciesList(): ArrayList<CurrencyList> {
+        return listItems
+    }
 
     fun updateItems(currencyList: List<CurrencyList>) {
         listItems.clear()
@@ -41,6 +44,10 @@ class CurrencyListAdapter() :
         fun bind(currency: CurrencyList) {
             itemBinding.tvCurrencyName.text = currency.currencyName
             itemBinding.tvCurrencyCode.text = currency.currencyCode
+
+            itemBinding.currencyListCheckbox.setOnClickListener {
+                currency.isSelected = it.isSelected
+            }
         }
     }
 }

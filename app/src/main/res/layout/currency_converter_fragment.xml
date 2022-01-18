@@ -48,9 +48,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_convert_currency"
         app:layout_constraintTop_toBottomOf="@+id/sp_currencies"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_convert_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAllCaps="false"
+        android:text="@string/convert_amount"
+        android:background="@drawable/button_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

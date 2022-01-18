@@ -33,6 +33,13 @@ class CurrencyConverterFragment : BaseFragment<CurrencyConverterFragmentBinding>
         viewModel.getAllCurrencies()
         setUpObservers()
         setUpRecyclerView()
+        activateListener()
+    }
+
+    private fun activateListener() {
+        bi.btnConvertCurrency.setOnClickListener {
+            getSelectedCurrencies(currencyListAdapter.getCurrenciesList())
+        }
     }
 
     private fun setUpObservers() {
@@ -44,25 +51,25 @@ class CurrencyConverterFragment : BaseFragment<CurrencyConverterFragmentBinding>
         viewModel.uiStateLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is LoadingState -> {
-                    bi.progressbar.visibility=View.VISIBLE
-                    bi.rcvCurrencyList.visibility=View.GONE
+                    bi.progressbar.visibility = View.VISIBLE
+                    bi.rcvCurrencyList.visibility = View.GONE
                 }
                 is UnloadingState -> {
-                    bi.progressbar.visibility=View.GONE
-                    bi.rcvCurrencyList.visibility=View.VISIBLE
+                    bi.progressbar.visibility = View.GONE
+                    bi.rcvCurrencyList.visibility = View.VISIBLE
                 }
-                is EmptyState ->{
+                is EmptyState -> {
                     requireContext().toast(getString(R.string.no_currency_found))
-                    bi.progressbar.visibility=View.GONE
-                    bi.rcvCurrencyList.visibility=View.GONE
+                    bi.progressbar.visibility = View.GONE
+                    bi.rcvCurrencyList.visibility = View.GONE
                 }
                 /*is ContentState -> {
 
                 }*/
                 is ErrorState -> {
                     requireContext().toast(it.message)
-                    bi.progressbar.visibility=View.GONE
-                    bi.rcvCurrencyList.visibility=View.VISIBLE
+                    bi.progressbar.visibility = View.GONE
+                    bi.rcvCurrencyList.visibility = View.VISIBLE
                 }
             }
         }
@@ -76,13 +83,14 @@ class CurrencyConverterFragment : BaseFragment<CurrencyConverterFragmentBinding>
                 allCurrencyList.add(
                     CurrencyList(
                         currencyName = currency.split("-")[0].trim(),
-                        currencyCode = currency.split("-")[1].trim()
+                        currencyCode = currency.split("-")[1].trim(),
+                        isSelected = false
                     )
                 )
             }
-            if(allCurrencyList.size>0){
+            if (allCurrencyList.size > 0) {
                 currencyListAdapter.updateItems(allCurrencyList)
-            }else{
+            } else {
                 requireContext().toast(getString(R.string.no_currency_found))
             }
         } catch (e: Exception) {
@@ -113,6 +121,33 @@ class CurrencyConverterFragment : BaseFragment<CurrencyConverterFragmentBinding>
         ).also {
             // it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             bi.spCurrencies.adapter = it
+        }
+    }
+
+    private fun getSelectedCurrencies(currenciesList: ArrayList<CurrencyList>) {
+
+        val selectCurrenciesList = currenciesList.filter {
+            it.isSelected
+        }
+        if (selectCurrenciesList.isNotEmpty()) {
+            createSelectedCurrenciesString(selectCurrenciesList as ArrayList<CurrencyList>)
+        } else {
+            requireContext().toast("Please select currency for Conversion")
+        }
+    }
+
+    private fun createSelectedCurrenciesString(currenciesList: ArrayList<CurrencyList>) {
+        try {
+            var selectedCurrencies = ""
+            for (i in 0 until currenciesList.size) {
+                selectedCurrencies += if (i == currenciesList.size - 1) {
+                    currenciesList[i].currencyCode
+                } else {
+                    currenciesList[i].currencyCode + ","
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
